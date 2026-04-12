@@ -16,6 +16,35 @@ body {
     display: flex;
     flex-direction: column;
 }
+/* CENTRALIZADO (estado inicial) */
+.container.centralizado {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.5s ease;
+}
+
+/* QUANDO SELECIONAR */
+.container.topo {
+  height: auto;
+  justify-content: flex-start;
+}
+
+/* ESCONDE HORÁRIOS NO INÍCIO */
+.horarios {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+/* MOSTRA HORÁRIOS */
+.horarios.ativo {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
 header {
     background: linear-gradient(90deg, #000, #1a1a1a);
     padding: 20px;

@@ -1,97 +1,146 @@
-.agendamento {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.agendamento input[type="date"] {
-    background-color: #1a1a1a;
-    color: #c59d5f;
-    border: 2px solid #c59d5f;
-    padding: 10px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    outline: none;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-.agendamento input[type="date"]:hover {
-    box-shadow: 0 0 10px #c59d5f;
-}
+/* BODY */
 body {
   font-family: Arial, sans-serif;
-  background: #111;
+  background: linear-gradient(180deg, #111, #1a1a1a);
   color: white;
+  margin: 0;
 }
-.agendamento {
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #2a2a2a;
+  padding: 20px 0;
+}
+
+h1 {
+  color: #c59d5f;
+  font-size: 2.2em;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+}
+
+/* SECTION */
+section {
+    min-height: 100vh;
+
+}
+
+/* CONTAINER */
+.container {
   max-width: 400px;
-  margin: 50px auto;
+  margin: 40px auto;
   text-align: center;
+  padding: 20px;
+  border-radius: 16px;
+  background: #161616;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
-section{
-    border-bottom: 2px solid #c59d5f;
-    height: 710px;
-  
-}
-button{
-    padding: 15px;
-    margin-top: 10px;
-    background-color: #0000004b;
-    border: 1px solid #c59d5f;
-    cursor: pointer;
-    border-radius: 15px;
-    width: 200px;
-    color: white;
-    font-size: 1.2em;
-}
-button:hover{
-    background-color: #1111;
-    box-shadow: 0 0 5px #c59d5f;
-    
-}
-h2{
-   font-family: 'Bebas Neue', sans-serif; 
-    text-shadow: 0px 0px 5px #000000b4;
-    color: #c59d5f;
-    font-size: 1.8em;
-}
-.campo {
+
+/* TÍTULO */
+h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  color: #c59d5f;
+  font-size: 2em;
   margin-bottom: 20px;
 }
-header{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   border-bottom: 2px solid #c59d5f;
-}
-h1{
-    color: #c59d5f;
-    font-size: 2.2em;
-    margin-top: 30px;
-    font-family: 'Bebas Neue', sans-serif;
-    text-shadow: 0px 0px 3px #0000009d;
+
+/* DIAS */
+.dias {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px 5px;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  
+.dias::-webkit-scrollbar {
+  display: none;
 }
 
-li {
-  background: #222;
-  margin: 5px;
-  padding: 10px;
+.dia {
+  min-width: 70px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
   cursor: pointer;
-  border-radius: 8px;
-  
+  flex-shrink: 0;
+  transition: all 0.2s ease;
 }
 
-li:hover {
-  background: #444;
-   box-shadow: 0 0 5px #000000c2;
-   transition-duration: .2s;
+.dia:hover {
+  transform: translateY(-3px);
+  border-color: #c59d5f;
 }
-label{
-    font-size: 1.1em;
+
+.dia.selecionado {
+  background: #c59d5f;
+  color: black;
+  transform: scale(1.05);
+}
+
+/* HORÁRIOS */
+/* HORÁRIOS */
+.horarios {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 por linha */
+  gap: 10px;
+}
+
+/* título ocupa tudo */
+.horarios h3 {
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.horario {
+  padding: 12px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.95em;
+  transition: all 0.2s ease;
+
+  width: 100%;
+  box-sizing: border-box; /* resolve o bug de estourar */
+}
+
+.horario:hover {
+  border-color: #c59d5f;
+  transform: scale(1.02);
+}
+
+.horario.selecionado {
+  background: #c59d5f;
+  color: black;
+}
+
+
+/* BOTÃO */
+.btn-confirmar {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid #c59d5f;
+  border-radius: 12px;
+  color: #c59d5f;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-confirmar:hover {
+  background: #c59d5f;
+  color: black;
+  box-shadow: 0 0 10px #c59d5f88;
 }
