@@ -23,7 +23,7 @@ function gerarProximosDias(qtd = 10) {
     data.setDate(hoje.getDate() + i);
 
     const diaSemana = data.getDay();
-    if (diaSemana === 0) continue; // bloqueia domingo
+    if (diaSemana === 0) continue;
 
     const div = document.createElement("div");
     div.classList.add("dia");
@@ -70,7 +70,7 @@ function selecionarHorario(elemento, horario) {
   horarioSelecionado = horario;
 }
 
-// SCROLL COM MOUSE (PC)
+// SCROLL
 diasDiv.addEventListener("wheel", (e) => {
   e.preventDefault();
   diasDiv.scrollLeft += e.deltaY;
@@ -93,17 +93,18 @@ botao.addEventListener("click", () => {
 
   const numero = "5581991204180";
 
-  const mensagem = `✅ *AGENDAMENTO CONFIRMADO*
+  const mensagem = `✅ AGENDAMENTO CONFIRMADO
 
 📅 Data: ${dataFormatada}
 ⏰ Horário: ${horarioSelecionado}
 
 💈 Obrigado pela preferência!`;
 
-  // 🔥 AQUI É O SEGREDO
-  const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
+  // 🔥 CORREÇÃO IMPORTANTE
+  const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
 
-  window.open(url, "_blank");
+  window.location.href = url;
 });
 
+// iniciar
 gerarProximosDias();
