@@ -1,5 +1,6 @@
 const diasDiv = document.getElementById("dias");
 const horariosDiv = document.getElementById("horarios");
+const botao = document.querySelector(".btn-confirmar");
 
 let dataSelecionada = null;
 let horarioSelecionado = null;
@@ -76,16 +77,33 @@ diasDiv.addEventListener("wheel", (e) => {
 });
 
 // BOTÃO CONFIRMAR
-const botao = document.querySelector(".btn-confirmar");
-
 botao.addEventListener("click", () => {
   if (!dataSelecionada || !horarioSelecionado) {
     alert("Selecione um dia e horário!");
     return;
   }
 
-  alert(`Agendamento confirmado:\n${dataSelecionada.toLocaleDateString()} às ${horarioSelecionado}`);
+  const dataFormatada = dataSelecionada.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
+
+  alert(`✅ Agendado com sucesso!\n\n📅 ${dataFormatada}\n⏰ ${horarioSelecionado}`);
+
+  const numero = "5581991204180";
+
+  const mensagem = `✅ *AGENDAMENTO CONFIRMADO*
+
+📅 Data: ${dataFormatada}
+⏰ Horário: ${horarioSelecionado}
+
+💈 Obrigado pela preferência!`;
+
+  // 🔥 AQUI É O SEGREDO
+  const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
+
+  window.open(url, "_blank");
 });
 
-// INICIAR
 gerarProximosDias();
