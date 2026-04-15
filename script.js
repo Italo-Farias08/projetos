@@ -5,7 +5,7 @@ const botao = document.querySelector(".btn-confirmar");
 let dataSelecionada = null;
 let horarioSelecionado = null;
 
-// horários de 08:00 até 21:00
+// horários
 const horarios = [];
 for (let i = 8; i <= 21; i++) {
   horarios.push(`${i.toString().padStart(2, "0")}:00`);
@@ -13,6 +13,34 @@ for (let i = 8; i <= 21; i++) {
 
 const nomesDias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const hoje = new Date();
+
+// 🔥 NOTIFICAÇÃO BONITA
+function mostrarMensagem(texto, cor = "#c59d5f") {
+  const msg = document.createElement("div");
+  msg.innerText = texto;
+
+  msg.style.position = "fixed";
+  msg.style.bottom = "20px";
+  msg.style.left = "50%";
+  msg.style.transform = "translateX(-50%)";
+  msg.style.background = cor;
+  msg.style.color = "#000";
+  msg.style.padding = "12px 20px";
+  msg.style.borderRadius = "10px";
+  msg.style.fontWeight = "bold";
+  msg.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+  msg.style.zIndex = "9999";
+  msg.style.opacity = "0";
+  msg.style.transition = "0.5s";
+
+  document.body.appendChild(msg);
+
+  setTimeout(() => msg.style.opacity = "1", 10);
+  setTimeout(() => {
+    msg.style.opacity = "0";
+    setTimeout(() => msg.remove(), 500);
+  }, 2500);
+}
 
 // GERAR DIAS
 function gerarProximosDias(qtd = 10) {
@@ -39,7 +67,7 @@ function gerarProximosDias(qtd = 10) {
   }
 }
 
-// SELECIONAR DIA
+// 🔥 SELECIONAR DIA (BUSCA DO BACK)
 function selecionarDia(elemento, data) {
   document.querySelectorAll(".dia").forEach(d => d.classList.remove("selecionado"));
   elemento.classList.add("selecionado");
@@ -47,6 +75,30 @@ function selecionarDia(elemento, data) {
   dataSelecionada = data;
   horarioSelecionado = null;
 
+  const dataFormatada = data.toLocaleDateString("pt-BR");
+
+  horariosDiv.innerHTML = "<h3>Carregando horários...</h3>";
+
+  fetch(`http://localhost:3000/agendamentos/${dataFormatada}`)
+    .then(res => res.json())
+    .then(ocupados => {
+
+      console.log("BACK:", ocupados);
+
+      const horariosOcupados = ocupados.map(h =>
+        h.horario.toString().trim().substring(0, 5)
+      );
+
+      renderizarHorarios(horariosOcupados);
+    })
+    .catch(() => {
+      console.log("Erro ao buscar, liberando tudo");
+      renderizarHorarios([]);
+    });
+}
+
+// 🔥 RENDERIZAR HORÁRIOS (CORRIGIDO)
+function renderizarHorarios(horariosOcupados) {
   horariosDiv.innerHTML = "<h3>Horários disponíveis:</h3>";
 
   horarios.forEach(h => {
@@ -54,56 +106,99 @@ function selecionarDia(elemento, data) {
     btn.classList.add("horario");
     btn.innerText = h;
 
-    btn.onclick = () => selecionarHorario(btn, h);
+    if (horariosOcupados.includes(h)) {
+      btn.style.background = "#444";
+      btn.style.opacity = "0.5";
+      btn.style.cursor = "not-allowed";
+      btn.innerText += " ❌";
+    } else {
+      btn.onclick = () => selecionarHorario(btn);
+    }
 
     horariosDiv.appendChild(btn);
   });
 }
 
-// SELECIONAR HORÁRIO
-function selecionarHorario(elemento, horario) {
+// 🔥 SELECIONAR HORÁRIO (100% seguro)
+function selecionarHorario(elemento) {
   document.querySelectorAll(".horario").forEach(h => {
     h.classList.remove("selecionado");
   });
 
   elemento.classList.add("selecionado");
-  horarioSelecionado = horario;
+
+  horarioSelecionado = elemento.innerText.replace(" ❌", "").trim();
+
+  console.log("Selecionado:", horarioSelecionado);
 }
 
-// SCROLL
-diasDiv.addEventListener("wheel", (e) => {
-  e.preventDefault();
-  diasDiv.scrollLeft += e.deltaY;
-});
-
-// BOTÃO CONFIRMAR
+// 🔥 CONFIRMAR AGENDAMENTO
 botao.addEventListener("click", () => {
   if (!dataSelecionada || !horarioSelecionado) {
-    alert("Selecione um dia e horário!");
+    mostrarMensagem("⚠️ Selecione um dia e horário!", "#ff4d4d");
     return;
   }
 
-  const dataFormatada = dataSelecionada.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  });
+  const dataFormatada = dataSelecionada.toLocaleDateString("pt-BR");
 
-  alert(`✅ Agendado com sucesso!\n\n📅 ${dataFormatada}\n⏰ ${horarioSelecionado}`);
+  const horarioFinal = horarioSelecionado; // 🔥 salva antes
 
-  const numero = "5581991204180";
+  fetch("http://localhost:3000/agendar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      data: dataFormatada,
+      horario: horarioFinal
+    })
+  })
+  .then(res => res.json())
+  .then(res => {
 
-  const mensagem = `✅ AGENDAMENTO CONFIRMADO
+    if (res.erro) {
+      mostrarMensagem("❌ " + res.erro, "#ff4d4d");
+      return;
+    }
+
+    mostrarMensagem("✅ Agendado com sucesso! 💈");
+
+    // 🔒 bloqueia na hora
+    const selecionado = document.querySelector(".horario.selecionado");
+    if (selecionado) {
+      selecionado.style.background = "#444";
+      selecionado.style.opacity = "0.5";
+      selecionado.style.cursor = "not-allowed";
+      selecionado.innerText += " ❌";
+      selecionado.onclick = null;
+      selecionado.classList.remove("selecionado");
+    }
+
+    // 🔄 atualiza horários
+    selecionarDia(
+      document.querySelector(".dia.selecionado"),
+      dataSelecionada
+    );
+
+    // 📲 WhatsApp
+    const numero = "5581991204180";
+
+    const mensagem = `🧾 *AGENDAMENTO CONFIRMADO*
 
 📅 Data: ${dataFormatada}
-⏰ Horário: ${horarioSelecionado}
+⏰ Horário: ${horarioFinal}
 
 💈 Obrigado pela preferência!`;
 
-  // 🔥 CORREÇÃO IMPORTANTE
-  const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
+    const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
 
-  window.location.href = url;
+    setTimeout(() => {
+      window.location.href = url;
+    }, 1500);
+  })
+  .catch(() => {
+    mostrarMensagem("❌ Erro ao conectar!", "#ff4d4d");
+  });
 });
 
 // iniciar
