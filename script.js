@@ -2,6 +2,10 @@ const diasDiv = document.getElementById("dias");
 const horariosDiv = document.getElementById("horarios");
 const botao = document.querySelector(".btn-confirmar");
 
+const modal = document.getElementById("modalNome");
+const inputNome = document.getElementById("nomeCliente");
+const confirmarNomeBtn = document.getElementById("confirmarNome");
+
 let dataSelecionada = null;
 let horarioSelecionado = null;
 
@@ -14,7 +18,7 @@ for (let i = 8; i <= 21; i++) {
 const nomesDias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const hoje = new Date();
 
-// 🔥 NOTIFICAÇÃO BONITA
+// 🔥 NOTIFICAÇÃO
 function mostrarMensagem(texto, cor = "#c59d5f") {
   const msg = document.createElement("div");
   msg.innerText = texto;
@@ -28,7 +32,6 @@ function mostrarMensagem(texto, cor = "#c59d5f") {
   msg.style.padding = "12px 20px";
   msg.style.borderRadius = "10px";
   msg.style.fontWeight = "bold";
-  msg.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
   msg.style.zIndex = "9999";
   msg.style.opacity = "0";
   msg.style.transition = "0.5s";
@@ -42,7 +45,7 @@ function mostrarMensagem(texto, cor = "#c59d5f") {
   }, 2500);
 }
 
-// GERAR DIAS
+// DIAS
 function gerarProximosDias(qtd = 10) {
   diasDiv.innerHTML = "";
 
@@ -67,7 +70,7 @@ function gerarProximosDias(qtd = 10) {
   }
 }
 
-// 🔥 SELECIONAR DIA (BUSCA DO BACK)
+// DIA
 function selecionarDia(elemento, data) {
   document.querySelectorAll(".dia").forEach(d => d.classList.remove("selecionado"));
   elemento.classList.add("selecionado");
@@ -83,9 +86,8 @@ function selecionarDia(elemento, data) {
     .then(res => res.json())
     .then(ocupados => {
 
-     const horariosOcupados = ocupados.map(h => {
-  const [hora, minuto] = h.horario.split(":");
-  return `${hora.padStart(2, "0")}:${minuto}`;
+      const horariosOcupados = ocupados.map(h => {
+  return h.horario.slice(0,5); // garante HH:MM
 });
 
       renderizarHorarios(horariosOcupados);
@@ -95,8 +97,7 @@ function selecionarDia(elemento, data) {
     });
 }
 
-// 🔥 RENDERIZAR HORÁRIOS (CORRIGIDO)
-
+// HORÁRIOS
 function renderizarHorarios(horariosOcupados) {
   horariosDiv.innerHTML = "<h3>Horários disponíveis:</h3>";
 
@@ -118,7 +119,7 @@ function renderizarHorarios(horariosOcupados) {
   });
 }
 
-// 🔥 SELECIONAR HORÁRIO (100% seguro)
+// HORÁRIO
 function selecionarHorario(elemento) {
   document.querySelectorAll(".horario").forEach(h => {
     h.classList.remove("selecionado");
@@ -127,20 +128,30 @@ function selecionarHorario(elemento) {
   elemento.classList.add("selecionado");
 
   horarioSelecionado = elemento.innerText.replace(" ❌", "").trim();
-
-  console.log("Selecionado:", horarioSelecionado);
 }
 
-// 🔥 CONFIRMAR AGENDAMENTO
+// 🔥 BOTÃO ABRE MODAL
 botao.addEventListener("click", () => {
   if (!dataSelecionada || !horarioSelecionado) {
     mostrarMensagem("⚠️ Selecione um dia e horário!", "#ff4d4d");
     return;
   }
 
-  const dataFormatada = dataSelecionada.toISOString().split("T")[0];
+  modal.style.display = "flex";
+});
 
-  const horarioFinal = horarioSelecionado; // 🔥 salva antes
+// 🔥 CONFIRMA NO MODAL
+confirmarNomeBtn.addEventListener("click", () => {
+
+  const nome = inputNome.value.trim();
+
+  if (!nome) {
+    mostrarMensagem("Digite seu nome!", "#ff4d4d");
+    return;
+  }
+
+  const dataFormatada = dataSelecionada.toISOString().split("T")[0];
+  const horarioFinal = horarioSelecionado;
 
   fetch("http://localhost:3000/agendar", {
     method: "POST",
@@ -148,6 +159,7 @@ botao.addEventListener("click", () => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
+      nome,
       data: dataFormatada,
       horario: horarioFinal
     })
@@ -155,48 +167,17 @@ botao.addEventListener("click", () => {
   .then(res => res.json())
   .then(res => {
 
+    modal.style.display = "none";
+
     if (res.erro) {
-      mostrarMensagem("❌ " + res.erro, "#ff4d4d");
+      mostrarMensagem(res.erro, "#ff4d4d");
       return;
     }
 
     mostrarMensagem("✅ Agendado com sucesso! 💈");
-
-    // 🔒 bloqueia na hora
-    const selecionado = document.querySelector(".horario.selecionado");
-    if (selecionado) {
-      selecionado.style.background = "#444";
-      selecionado.style.opacity = "0.5";
-      selecionado.style.cursor = "not-allowed";
-      selecionado.innerText += " ❌";
-      selecionado.onclick = null;
-      selecionado.classList.remove("selecionado");
-    }
-
-    // 🔄 atualiza horários
-    selecionarDia(
-      document.querySelector(".dia.selecionado"),
-      dataSelecionada
-    );
-
-    // 📲 WhatsApp
-    const numero = "5581991204180";
-
-    const mensagem = `🧾 *AGENDAMENTO CONFIRMADO*
-
-📅 Data: ${dataFormatada}
-⏰ Horário: ${horarioFinal}
-
-💈 Obrigado pela preferência!`;
-
-    const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
-
-    setTimeout(() => {
-      window.location.href = url;
-    }, 1500);
   })
   .catch(() => {
-    mostrarMensagem("❌ Erro ao conectar!", "#ff4d4d");
+    mostrarMensagem("Erro ao agendar!", "#ff4d4d");
   });
 });
 

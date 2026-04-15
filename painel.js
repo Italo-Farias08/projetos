@@ -31,13 +31,14 @@ function carregarAgendamentos() {
         const info = document.createElement("div");
         info.classList.add("info");
 
-        const data = item.data;
-        const horario = item.horario.toString().substring(0,5);
+       const data = item.data;
+const horario = item.horario.toString().substring(0,5);
 
-        info.innerHTML = `
-          <div>📅 <strong>${data}</strong></div>
-          <div>⏰ ${horario}</div>
-        `;
+info.innerHTML = `
+  <div>👤 <strong>${item.nome || "Sem nome"}</strong></div>
+  <div>📅 ${data}</div>
+  <div>⏰ ${horario}</div>
+`;
 
         const btn = document.createElement("button");
         btn.innerText = "❌ Cancelar";
