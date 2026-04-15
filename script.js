@@ -75,7 +75,7 @@ function selecionarDia(elemento, data) {
   dataSelecionada = data;
   horarioSelecionado = null;
 
-  const dataFormatada = data.toLocaleDateString("pt-BR");
+  const dataFormatada = dataSelecionada.toISOString().split("T")[0];
 
   horariosDiv.innerHTML = "<h3>Carregando horários...</h3>";
 
@@ -83,34 +83,33 @@ function selecionarDia(elemento, data) {
     .then(res => res.json())
     .then(ocupados => {
 
-      console.log("BACK:", ocupados);
-
-      const horariosOcupados = ocupados.map(h =>
-        h.horario.toString().trim().substring(0, 5)
-      );
+     const horariosOcupados = ocupados.map(h => {
+  const [hora, minuto] = h.horario.split(":");
+  return `${hora.padStart(2, "0")}:${minuto}`;
+});
 
       renderizarHorarios(horariosOcupados);
     })
     .catch(() => {
-      console.log("Erro ao buscar, liberando tudo");
       renderizarHorarios([]);
     });
 }
 
 // 🔥 RENDERIZAR HORÁRIOS (CORRIGIDO)
+
 function renderizarHorarios(horariosOcupados) {
   horariosDiv.innerHTML = "<h3>Horários disponíveis:</h3>";
 
   horarios.forEach(h => {
+
     const btn = document.createElement("div");
     btn.classList.add("horario");
     btn.innerText = h;
 
     if (horariosOcupados.includes(h)) {
-      btn.style.background = "#444";
-      btn.style.opacity = "0.5";
-      btn.style.cursor = "not-allowed";
-      btn.innerText += " ❌";
+      btn.innerText += " ❌ OCUPADO";
+      btn.style.opacity = "0.4";
+      btn.style.pointerEvents = "none";
     } else {
       btn.onclick = () => selecionarHorario(btn);
     }
@@ -139,7 +138,7 @@ botao.addEventListener("click", () => {
     return;
   }
 
-  const dataFormatada = dataSelecionada.toLocaleDateString("pt-BR");
+  const dataFormatada = dataSelecionada.toISOString().split("T")[0];
 
   const horarioFinal = horarioSelecionado; // 🔥 salva antes
 
