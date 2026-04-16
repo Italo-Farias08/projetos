@@ -3,53 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>Agendamento</title>
-
-  <!-- Responsivo -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Estilos -->
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="mobile.css" media="screen and (max-width: 640px)">
-
-  <!-- Fonte -->
+  <link rel="stylesheet" href="mobile.css"">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
-
 <body>
-
-  <!-- HEADER -->
   <header>
     <h1>Agende seu horário</h1>
   </header>
-
-  <!-- SEÇÃO PRINCIPAL -->
   <section class="agendamento">
-
     <div class="container centralizado">
       <h2>Agendar horário</h2>
-
-      <!-- DIAS (SEM SETAS AGORA) -->
       <div class="dias" id="dias"></div>
-
-      <!-- HORÁRIOS -->
       <div class="horarios" id="horarios"></div>
-
-      <!-- BOTÃO CONFIRMAR -->
       <button class="btn-confirmar">Confirmar</button>
     </div>
-
   </section>
   <div id="modalNome" class="modal">
   <div class="modal-box">
     <h3>Digite seu nome</h3>
-
     <input id="nomeCliente" type="text" placeholder="Seu nome">
-
-    <button id="confirmarNome">Confirmar agendamento</button>
+    <button id="confirmarNome">Confirmar</button>
   </div>
 </div>
-  <!-- SCRIPT -->
   <script src="script.js"></script>
-
 </body>
 </html>

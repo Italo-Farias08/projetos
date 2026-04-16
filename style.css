@@ -1,108 +1,98 @@
-@charset "UTF-8";
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Bebas Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Bebas Neue', sans-serif;
 }
 html{
-height: 100vh;
+    height: 100vh;
 }
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #0d0d0d;
-    color: #fff;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-/* CENTRALIZADO (estado inicial) */
-.container.centralizado {
-  height: 80vh;
+  background: radial-gradient(circle at top, #111, #070707);
+  color: #f5f5f5;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: all 0.5s ease;
+  align-items: center;
 }
 
-/* QUANDO SELECIONAR */
-.container.topo {
-  height: auto;
-  justify-content: flex-start;
-}
-
-/* ESCONDE HORÁRIOS NO INÍCIO */
-.horarios {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition: all 0.4s ease;
-}
-
-/* MOSTRA HORÁRIOS */
-.horarios.ativo {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: all;
-}
+/* HEADER */
 header {
-    background: linear-gradient(90deg, #000, #1a1a1a);
-    padding: 20px;
-    height: 15svh;
-      display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-bottom: 2px solid #c59d5f;
-}
-header h1 {
-    font-size: 2.8rem;
-    color: #c59d5f;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.616);
-}
-main {
-    padding: 40px;
-    text-align: center;
-    flex: 1;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-main h2 {
-    margin-bottom: 40px;
-    font-size: 1.8rem;
-    color: #c59d5f;
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.644);
-}
-main img {
-    width: 280px;
-    height: 320px;
-    object-fit: cover;
-    border-radius: 16%;
-    border: 4px solid #c59d5f;
-    transition: 0.3s;
-}
-main img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px #c59d5f;
-}
-footer {
-    background-color: #000;
-    text-align: center;
-    padding: 10px;
-    border-top: 2px solid #c59d5f;
-    margin-top: 40px;
-}
-a{
-    text-decoration: none;
-     color: #aaa;
+  text-align: center;
+  padding: 30px 10px;
+  background: linear-gradient(90deg, #0a0a0a, #111);
+  border-bottom: 1px solid rgba(245, 196, 0, 0.3);
+  width: 100vw;
 }
 
-footer p {
-    font-size: 1.1rem;
-    color: #aaa;
+header h1 {
+  font-size: 2.5em;
+  color: #f5c400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* MAIN */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  text-align: center;
+  padding: 20px;
+  width: 300px;
+  height: 100vh;
+}
+
+main h2 {
+  font-size: 28px;
+  color: #eaeaea;
+  letter-spacing: 1px;
+}
+
+/* IMAGEM PRINCIPAL */
+#fotoprincipal {
+  width: 280px;
+  height: 300px;
+  object-fit: cover;
+  border: 1px solid #f5c400;
+  border-radius: 12%;
+   box-shadow: 0 0px 10px rgba(245,196,0,0.2);
+  transition: 0.3s ease;
+}
+
+/* HOVER DA FOTO */
+#fotoprincipal:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0px 20px rgba(245,196,0,0.2);
+}
+
+/* LINK (remove estilo) */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 12px;
+  border-top: 1px solid #222;
+  background: #0a0a0a;
+  font-size: 20px;
+  width: 100vw;
+  
+}
+
+footer a {
+  color: #f5c400;
+  margin: 0;
+  transition: 0.2s;
+}
+
+footer a:hover {
+  opacity: 0.8;
 }
