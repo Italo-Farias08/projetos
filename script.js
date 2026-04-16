@@ -173,6 +173,18 @@ confirmarNomeBtn.addEventListener("click", () => {
       mostrarMensagem(res.erro, "#ff4d4d");
       return;
     }
+    const numero = "5581991204180";
+
+const mensagem = `🧾 *AGENDAMENTO CONFIRMADO*
+
+📅 Data: ${dataFormatada}
+⏰ Horário: ${horarioFinal}
+
+💈 Novo agendamento recebido no sistema!`;
+
+const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
+
+window.location.href = url;
 
     mostrarMensagem("✅ Agendado com sucesso! 💈");
   })
